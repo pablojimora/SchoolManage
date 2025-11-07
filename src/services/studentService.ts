@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://webescuela-production.up.railway.app/api/student",
+  baseURL: process.env.NEXT_PUBLIC_API_URL_STUDENTS, 
   headers: {
     "Content-Type": "application/json",
   },
