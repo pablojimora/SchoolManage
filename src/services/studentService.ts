@@ -7,6 +7,8 @@ const API = axios.create({
     },
 });
 
+console.log("🔗 API Base URL:", process.env.NEXT_PUBLIC_API_URL_STUDENTS);
+
 // interface base
 export interface Student {
     id: number;
@@ -23,13 +25,28 @@ export interface StudentPayload {
     email: string;
 }
 
+
 // GET
 export const getStudents = async (): Promise<Student[]> => {
     try {
-        const { data } = await API.get("/");
-        return data;
+        // Obtener token del localStorage si existe
+        const session = localStorage.getItem("userSession");
+        const token = session ? JSON.parse(session).token : null;
+        
+        const config = token ? {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        } : {};
+        
+        const { data } = await API.get("/", config);
+        console.log("📊 Response from API:", data);
+        console.log("📊 Is Array?", Array.isArray(data));
+        // Asegurarse de que siempre devolvemos un array
+        return Array.isArray(data) ? data : [];
     } catch (error: any) {
         console.error("Error al obtener estudiantes:", error.response?.data || error.message);
+        console.error("Status code:", error.response?.status);
         throw new Error("No se pudieron obtener los estudiantes");
     }
 };
@@ -37,10 +54,10 @@ export const getStudents = async (): Promise<Student[]> => {
 // GET BY ID
 export const getStudentById = async (id: number): Promise<Student> => {
     try {
-        const { data } = await API.get(/${id});
-    return data;
+        const { data } = await API.get(`/${id}`);
+        return data;
     } catch (error: any) {
-        console.error(Error al obtener estudiante con ID ${ id }:, error.response?.data || error.message);
+        console.error(`Error al obtener estudiante con ID ${id}:`, error.response?.data || error.message);
         throw new Error("No se pudo obtener el estudiante");
     }
 };
@@ -59,10 +76,10 @@ export const createStudent = async (student: StudentPayload) => {
 // PUT
 export const updateStudent = async (id: number, student: StudentPayload) => {
     try {
-        const { data } = await API.put(/${id}, student);
-    return data;
+        const { data } = await API.put(`/${id}`, student);
+        return data;
     } catch (error: any) {
-        console.error(Error al actualizar estudiante ${ id }:, error.response?.data || error.message);
+        console.error(`Error al actualizar estudiante ${id}:`, error.response?.data || error.message);
         throw new Error(error.response?.data?.message || "No se pudo actualizar el estudiante");
     }
 };
@@ -70,10 +87,10 @@ export const updateStudent = async (id: number, student: StudentPayload) => {
 // DELETE
 export const deleteStudent = async (id: number) => {
     try {
-        const { data } = await API.delete(/${id});
-    return data;
+        const { data } = await API.delete(`/${id}`);
+        return data;
     } catch (error: any) {
-        console.error(Error al eliminar estudiante ${ id }:, error.response?.data || error.message);
+        console.error(`Error al eliminar estudiante ${id}:`, error.response?.data || error.message);
         throw new Error("No se pudo eliminar el estudiante");
     }
 };

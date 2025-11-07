@@ -28,7 +28,7 @@ const StudentList: React.FC<StudentListProps> = ({
                     </div>
                 ) : (
                     <div className="space-y-3 max-h-96 overflow-y-auto">
-                        {students.map((student) => (
+                        {Array.isArray(students) && students.map((student) => (
                             <StudentCard
                                 key={student.id}
                                 student={student}
@@ -36,7 +36,7 @@ const StudentList: React.FC<StudentListProps> = ({
                                 onDelete={onDelete}
                             />
                         ))}
-                        {students.length === 0 && (
+                        {(!Array.isArray(students) || students.length === 0) && (
                             <p className="text-gray-500 text-center py-4">
                                 Estudiantes no encontrados. Agrega tu primer estudiante! 🎓
                             </p>
