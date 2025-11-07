@@ -78,3 +78,11 @@ export const deleteStudent = async (id: number) => {
   }
 };
 
+export default {
+    getStudents,
+    getStudentById,
+    createStudent,
+    updateStudent,
+    deleteStudent,
+  };
+  
