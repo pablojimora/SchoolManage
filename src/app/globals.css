@@ -25,3 +25,22 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 } */
 
+
+
+/* colores de los toasts */
+.Toastify__toast--success {
+  background-color: #10b981 !important;
+}
+
+.Toastify__toast--error {
+  background-color: #bb3131 !important;
+  color: white !important;
+}
+
+.Toastify__toast--info {
+  background-color: #3b82f6 !important;
+}
+
+.Toastify__toast--warning {
+  background-color: #f59e0b !important;
+}
