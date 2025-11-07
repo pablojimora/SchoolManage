@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Create Next App",
-  description: "Management system for students and users",
+  description: "Sistema de Gestión de Estudiantes y Usuarios",
 };
 
 export default function RootLayout({
