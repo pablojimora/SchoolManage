@@ -24,7 +24,9 @@ export const CreateUserForm = () => {
     }));
   };
 
- const handleSubmit = async () => {
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  console.log("Datos enviados:", formData); 
   const result = await createUser(formData);
   if (result.error) {
     alert(result.message); // 👉 mostrará: "Username o Email ya están en uso"
@@ -70,8 +72,8 @@ export const CreateUserForm = () => {
           onChange={handleChange}
           className="w-full p-2 border rounded"
         >
-          <option value={1}>Usuario</option>
-          <option value={2}>Admin</option>
+          <option value={1}>Admin</option>
+          <option value={2}>Usuario</option>
         </select>
       </div>
 

@@ -2,9 +2,9 @@ import React from 'react'
 
 const DashboardAdmin = () => {
   return (
-    <div>
-      Dashboard Admin
-    </div>
+    <>
+      <h1>Admin Dashboard</h1>
+    </>
   )
 }
 
