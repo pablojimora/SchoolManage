@@ -35,10 +35,10 @@ const LoginForm: React.FC = () => {
 
     console.log("✅ Login exitoso:", response);
 
-    if (response.role === "admin") {
-      router.push("/pages/dashboardUsers");
-    } else {
+    if (response.role === "Admin") {
       router.push("/pages/dashboardAdmin");
+    } else {
+      router.push("/pages/dashboardUsers");
     }
   } catch (err) {
     console.error("Error inesperado:", err);
