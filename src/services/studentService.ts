@@ -1,13 +1,11 @@
 import axios from "axios";
 
 const API = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL_STUDENTS,
+    baseURL: `${process.env.NEXT_PUBLIC_API_URL}/api/Student`,
     headers: {
         "Content-Type": "application/json",
     },
 });
-
-console.log("🔗 API Base URL:", process.env.NEXT_PUBLIC_API_URL_STUDENTS);
 
 // interface base
 export interface Student {
@@ -30,8 +28,7 @@ export interface StudentPayload {
 export const getStudents = async (): Promise<Student[]> => {
     try {
         // Obtener token del localStorage si existe
-        const session = localStorage.getItem("userSession");
-        const token = session ? JSON.parse(session).token : null;
+        const token = localStorage.getItem("token");
         
         const config = token ? {
             headers: {
@@ -40,8 +37,7 @@ export const getStudents = async (): Promise<Student[]> => {
         } : {};
         
         const { data } = await API.get("/", config);
-        console.log("📊 Response from API:", data);
-        console.log("📊 Is Array?", Array.isArray(data));
+
         // Asegurarse de que siempre devolvemos un array
         return Array.isArray(data) ? data : [];
     } catch (error: any) {
@@ -51,10 +47,17 @@ export const getStudents = async (): Promise<Student[]> => {
     }
 };
 
-// GET BY ID
+
 export const getStudentById = async (id: number): Promise<Student> => {
     try {
-        const { data } = await API.get(`/${id}`);
+        const token = localStorage.getItem("token");
+        const config = token ? {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        } : {};
+        
+        const { data } = await API.get(`/${id}`, config);
         return data;
     } catch (error: any) {
         console.error(`Error al obtener estudiante con ID ${id}:`, error.response?.data || error.message);
@@ -62,10 +65,18 @@ export const getStudentById = async (id: number): Promise<Student> => {
     }
 };
 
+
 // POST
 export const createStudent = async (student: StudentPayload) => {
     try {
-        const { data } = await API.post("/", student);
+        const token = localStorage.getItem("token");
+        const config = token ? {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        } : {};
+        
+        const { data } = await API.post("/", student, config);
         return data;
     } catch (error: any) {
         console.error("Error al crear estudiante:", error.response?.data || error.message);
@@ -73,10 +84,18 @@ export const createStudent = async (student: StudentPayload) => {
     }
 };
 
+
 // PUT
 export const updateStudent = async (id: number, student: StudentPayload) => {
     try {
-        const { data } = await API.put(`/${id}`, student);
+        const token = localStorage.getItem("token");
+        const config = token ? {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        } : {};
+        
+        const { data } = await API.put(`/${id}`, student, config);
         return data;
     } catch (error: any) {
         console.error(`Error al actualizar estudiante ${id}:`, error.response?.data || error.message);
@@ -84,10 +103,18 @@ export const updateStudent = async (id: number, student: StudentPayload) => {
     }
 };
 
+
 // DELETE
 export const deleteStudent = async (id: number) => {
     try {
-        const { data } = await API.delete(`/${id}`);
+        const token = localStorage.getItem("token");
+        const config = token ? {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        } : {};
+        
+        const { data } = await API.delete(`/${id}`, config);
         return data;
     } catch (error: any) {
         console.error(`Error al eliminar estudiante ${id}:`, error.response?.data || error.message);
