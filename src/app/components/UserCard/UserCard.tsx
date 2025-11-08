@@ -4,7 +4,7 @@ import { FaRegUser, FaEdit, FaRegTrashAlt } from "react-icons/fa";
 const UserCard = ({ id, userName, email, roleName, onEdit, onDelete }: UserCardProps) => {
   return (
     <div
-      id={id}
+      id={String(id)}
       className="user__card bg-white shadow-md rounded-xl p-5 flex flex-col justify-between hover:shadow-lg transition-all duration-200"
     >
       <div className="user__card--header flex items-center gap-3 mb-4">
@@ -32,7 +32,7 @@ const UserCard = ({ id, userName, email, roleName, onEdit, onDelete }: UserCardP
 
       <div className="user__card--actions flex justify-end gap-3 mt-auto">
         <button
-          onClick={onEdit}
+          onClick={() => onEdit({ id, userName, email, roleName, roleId: roleName === "Admin" ? 1 : 2, password: ""})}
           className="p-2 rounded-lg hover:bg-blue-100 text-blue-500 transition-colors"
           title="Edit User"
         >
