@@ -22,3 +22,35 @@ export const getUsers = async (token: string) => {
   }
 }
 
+export const updateUser = async (
+  id: number,
+  updatedUser: {
+    userName: string;
+    email: string;
+    roleId: number;
+    password?: string;
+  },
+  token: string
+) => {
+  try {
+    const response = await axios.put(
+      `${API_URL}/api/User/${id}`,
+      updatedUser,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    console.error("Error updating user:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
+
