@@ -13,3 +13,13 @@ export interface User {
   password: string;
   roleId: 1 | 2;
 }
+export interface StudentCardProps {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  created_at: string;
+  onEdit: () => void;
+  onDelete: () => void;
+}
+
