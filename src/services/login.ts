@@ -22,8 +22,6 @@ export const createUser = async (data: {
   }
 };
 
-
-
 export const loginUser = async (data: {
   userName: string;
   password: string;
