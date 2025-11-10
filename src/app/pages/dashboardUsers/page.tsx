@@ -5,7 +5,13 @@ import { FaRegUser } from "react-icons/fa";
 import { FiPlus, FiLogOut } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getStudents, deleteStudent, updateStudent, createStudent, Student } from "@/services/studentService";
+import {
+  getStudents,
+  deleteStudent,
+  updateStudent,
+  createStudent,
+  Student,
+} from "@/services/studentService";
 import StudentCard from "@/app/components/StudentCard/StudentCard";
 
 // 2. COMPONENTE PRINCIPAL
@@ -19,17 +25,14 @@ const DashboardUsers = () => {
   // 4. FUNCIONES DE CRUD
   const onEdit = async (id: number) => {
     console.log("Editando estudiante:", id);
-    // TODO: Aquí puedes abrir un modal o formulario para editar
-    // Por ahora, vamos a hacer un ejemplo simple con prompt
     const firstName = prompt("Nuevo nombre:");
     const lastName = prompt("Nuevo apellido:");
     const email = prompt("Nuevo email:");
-    
+
     if (firstName && lastName && email) {
       try {
         await updateStudent(id, { firstName, lastName, email });
         alert("Estudiante actualizado correctamente");
-        // Recargar la lista
         const studentsData = await getStudents();
         setStudents(studentsData);
       } catch (error) {
@@ -41,12 +44,11 @@ const DashboardUsers = () => {
 
   const onDelete = async (id: number) => {
     const confirmDelete = confirm("¿Estás seguro de eliminar este estudiante?");
-    
+
     if (confirmDelete) {
       try {
         await deleteStudent(id);
         alert("Estudiante eliminado correctamente");
-        // Recargar la lista
         const studentsData = await getStudents();
         setStudents(studentsData);
       } catch (error) {
@@ -60,12 +62,11 @@ const DashboardUsers = () => {
     const firstName = prompt("Nombre del estudiante:");
     const lastName = prompt("Apellido del estudiante:");
     const email = prompt("Email del estudiante:");
-    
+
     if (firstName && lastName && email) {
       try {
         await createStudent({ firstName, lastName, email });
         alert("Estudiante creado correctamente");
-        // Recargar la lista
         const studentsData = await getStudents();
         setStudents(studentsData);
       } catch (error) {
@@ -117,24 +118,30 @@ const DashboardUsers = () => {
   return (
     <>
       {/* NAVBAR */}
-      <nav className="navbar flex items-center justify-between py-5 px-6 border-b-2">
-        <div className="navbar__logo flex gap-4 items-center">
-          <FaRegUser size={22} />
-          <span className="font-semibold">User Panel</span>
+      <nav className="flex items-center justify-between py-4 px-8 bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-200">
+        {/* LOGO */}
+        <div className="flex items-center gap-3">
+          <FaRegUser size={26} className="text-sky-600" />
+          <span className="text-lg font-semibold text-gray-800 tracking-wide">
+            User Panel
+          </span>
         </div>
 
-        <div className="navbar__actions flex gap-7 items-center">
-          <div className="navbar__info--role flex items-center gap-2 pl-4 border-l-2">
-            <FaRegUser />
-            <span>{role}</span>
+        {/* ACCIONES */}
+        <div className="flex items-center gap-8">
+          {/* INFO DE ROL */}
+          <div className="flex items-center gap-2 text-gray-700 pl-6 border-l border-gray-300">
+            <FaRegUser className="text-gray-500" />
+            <span className="text-sm font-medium">{role}</span>
           </div>
 
+          {/* BOTÓN DE LOGOUT */}
           <button
             onClick={handleLogout}
-            className="p-2 rounded-[.3rem] hover:bg-gray-100 transition-colors"
+            className="p-2 rounded-full hover:bg-red-50 transition-all duration-200"
             title="Logout"
           >
-            <FiLogOut size={20} className="text-gray-600" />
+            <FiLogOut size={20} className="text-red-500 hover:text-red-600" />
           </button>
         </div>
       </nav>
@@ -152,7 +159,7 @@ const DashboardUsers = () => {
             </p>
           </div>
 
-          <button 
+          <button
             onClick={handleAddStudent}
             className="container__content--button flex items-center gap-3 bg-blue-500 text-white p-3 rounded-[.3rem] cursor-pointer hover:bg-blue-600 transition-colors"
           >
