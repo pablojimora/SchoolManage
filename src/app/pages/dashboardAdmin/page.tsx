@@ -34,7 +34,7 @@ const DashboardAdmin = () => {
   const [role, setRole] = useState("");
   const router = useRouter();
 
- 
+ const [searchId, setSearchId] = useState(""); ///-----------------
 
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -248,34 +248,106 @@ const handleAddUser = () => {
       </nav>
 
       <div className="container w-[90%] max-w-[1200px] mx-auto my-19">
-        <div className="container__content flex items-center justify-between">
-          <div className="container__content--texts flex flex-col">
-            <h3 className="content__texts--title text-[1.7rem] font-bold">
-              {activeUsersManagement && "Manage Users"}
-              {activeStudentsManagement && "Manage Students"}
-            </h3>
-            <p className="content__texts--description text-gray-700">
-              {activeUsersManagement && "View and manage all system users"}
-              {activeStudentsManagement &&
-                "View and manage all system students"}
-            </p>
-          </div>
 
+
+  
+        <div className="container__content flex flex-col sm:flex-row justify-between items-center gap-3">
+        {/* TÍTULOS */}
+        <div className="container__content--texts flex flex-col">
+          <h3 className="content__texts--title text-[1.7rem] font-bold">
+            {activeUsersManagement && "Manage Users"}
+            {activeStudentsManagement && "Manage Students"}
+          </h3>
+          <p className="content__texts--description text-gray-700">
+            {activeUsersManagement && "View and manage all system users"}
+            {activeStudentsManagement && "View and manage all system students"}
+          </p>
+        </div>
+
+        {/* 🔍 BUSCADOR + BOTONES */}
+        {activeUsersManagement && (
+          <div className="flex flex-wrap items-center gap-2">
+            <input
+              type="text"
+              placeholder="Buscar por ID"
+              value={searchId}
+              onChange={(e) => setSearchId(e.target.value)}
+              className="border border-gray-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+            />
+
+            <button
+              onClick={async () => {
+                if (!searchId.trim()) {
+                  showWarningToast("Ingresa un ID para buscar ⚠️");
+                  return;
+                }
+
+                try {
+                  const token = localStorage.getItem("token");
+                  if (!token) {
+                    showErrorToast("Token no encontrado ❌");
+                    return;
+                  }
+
+                  const user = await getUserById(parseInt(searchId), token);
+                  if (user) {
+                    setUsers([user]);
+                    showSuccessToast("Usuario encontrado ");
+                  } else {
+                    showInfoToast("No se encontró ningún usuario con ese ID 🔍");
+                  }
+                } catch (err) {
+                  console.error("Error al buscar usuario:", err);
+                  showErrorToast("Error al buscar usuario ❌");
+                }
+              }}
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition-all"
+            >
+              Buscar
+            </button>
+
+            <button
+              onClick={async () => {
+                const token = localStorage.getItem("token");
+                if (!token) return;
+
+                const updatedUsers = await getUsers(token);
+                setUsers(updatedUsers);
+                setSearchId("");
+                showInfoToast("Lista restaurada 🔄");
+              }}
+              className="bg-gray-200 text-gray-700 px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-300 transition-all"
+            >
+              Limpiar
+            </button>
+
+            <button
+              onClick={
+                activeStudentsManagement
+                  ? handleAddStudent
+                  : activeUsersManagement
+                  ? handleAddUser
+                  : undefined
+              }
+              className="container__content--button flex items-center gap-3 bg-linear-to-r from-sky-600 to-blue-600 text-white p-3 rounded-[.3rem] cursor-pointer"
+            >
+              <FiPlus />
+              <span>Add User</span>
+            </button>
+          </div>
+        )}
+
+        
+        {activeStudentsManagement && (
           <button
-            onClick={
-              activeStudentsManagement
-                ? handleAddStudent
-                : activeUsersManagement
-                ? handleAddUser
-                : undefined
-            }
+            onClick={handleAddStudent}
             className="container__content--button flex items-center gap-3 bg-linear-to-r from-sky-600 to-blue-600 text-white p-3 rounded-[.3rem] cursor-pointer"
           >
             <FiPlus />
-            {activeUsersManagement && <span>Add User</span>}
-            {activeStudentsManagement && <span>Add Student</span>}
+            <span>Add Student</span>
           </button>
-        </div>
+        )}
+      </div>
 
         <div className="container__cards grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-10 mb-20">
           {activeUsersManagement && users && users.length > 0
@@ -384,8 +456,6 @@ const handleAddUser = () => {
           }}
         />
       )}
-
-
 
       </div>
     </>

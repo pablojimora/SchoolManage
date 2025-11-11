@@ -6,7 +6,7 @@ const UserCard = ({ id, userName, email, roleName, onEdit, onDelete }: UserCardP
   return (
     <div
       id={String(id)}
-      className="user__card bg-white shadow-md rounded-xl p-5 flex flex-col justify-between hover:shadow-lg transition-all duration-200"
+      className="user__card bg-white shadow-md rounded-xl p-5 flex flex-col justify-between hover:shadow-lg transition-all duration-200 relative"
     >
       <div className="user__card--header flex items-center gap-3 mb-4">
         <div className="p-3 bg-sky-100 text-sky-600 rounded-full">
@@ -18,6 +18,8 @@ const UserCard = ({ id, userName, email, roleName, onEdit, onDelete }: UserCardP
           <span className="text-gray-500 text-sm">{email}</span>
         </div>
       </div>
+
+      <p className="absolute top-3 right-3 bg-sky-500 text-white p-2 rounded-xl">{id}</p>
 
       <div className="user__card--role mb-4">
         <span
