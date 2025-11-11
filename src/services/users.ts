@@ -53,4 +53,45 @@ export const updateUser = async (
 };
 
 
+//--------------------
 
+export const getUserById = async (id: number, token: string) => {
+  try {
+    const response = await axios.get(`${API_URL}/api/User/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`Error al obtener el usuario con ID ${id}:`, error);
+  }
+};
+
+
+export const createUser = async (
+  data: { userName: string; email: string; password: string; roleId: number },
+  token?: string
+) => {
+  try {
+    const response = await axios.post(`${API_URL}/api/User`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error al crear usuario:", error);
+  }
+};
+
+
+export const deleteUser = async (id: number, token: string) => {
+  try {
+    const response = await axios.delete(`${API_URL}/api/User/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`Error al eliminar usuario con ID ${id}:`, error);
+  }
+};
