@@ -2,6 +2,7 @@ import { UserCardProps } from "@/interfaces/main";
 import { FaRegUser, FaEdit, FaRegTrashAlt } from "react-icons/fa";
 
 const UserCard = ({ id, userName, email, roleName, onEdit, onDelete }: UserCardProps) => {
+  
   return (
     <div
       id={String(id)}
@@ -23,7 +24,7 @@ const UserCard = ({ id, userName, email, roleName, onEdit, onDelete }: UserCardP
           className={`inline-block px-3 py-1 text-sm font-medium rounded-full ${
             roleName === "Admin"
               ? "bg-red-100 text-red-600"
-              : "bg-green-100 text-green-600"
+              : "bg-green-100 text-blue-600"
           }`}
         >
           {roleName}

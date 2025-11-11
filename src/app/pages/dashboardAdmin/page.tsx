@@ -6,7 +6,7 @@ import { FiPlus, FiLogOut } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { UserCardProps } from "@/interfaces/main";
-import { getUsers, updateUser } from "@/services/users";
+import { createUser, deleteUser, getUserById, getUsers, updateUser } from "@/services/users";
 import UserCard from "@/app/components/UserCard/UserCard";
 import EditUserModal from "@/app/components/EditUserModal/EditUserModal";
 import {
@@ -17,6 +17,10 @@ import {
   type Student,
 } from "@/services/studentService";
 import StudentCard from "@/app/components/StudentCard/StudentCard";
+import { showErrorToast, showInfoToast, showSuccessToast, showWarningToast } from "@/utils/toast";
+import AddUserModal from "@/app/components/AddUserModal/AddUserModal";
+
+
 
 const DashboardAdmin = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -29,6 +33,9 @@ const DashboardAdmin = () => {
   const [token, setToken] = useState("");
   const [role, setRole] = useState("");
   const router = useRouter();
+
+ 
+
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onEditUser = (user: any) => {
@@ -56,6 +63,28 @@ const DashboardAdmin = () => {
     }
   };
 
+
+  ///-------------------
+
+  const onDeleteUser = async (id: number) => {
+    const confirmDelete = confirm("¿Estás seguro de eliminar este usuario?");
+    if (!confirmDelete) return;
+
+    try {
+      await deleteUser(id, token);
+      showSuccessToast("Usuario eliminado correctamente ");
+      const updatedUsers = await getUsers(token);
+      setUsers(updatedUsers);
+    } catch (error) {
+      console.error("Error al eliminar usuario:", error);
+      showErrorToast("Error al eliminar el usuario ");
+    }
+  };
+
+
+  ///-----------------------------
+
+
   const onDelete = () => {
     console.log("Borrando...");
   };
@@ -76,9 +105,15 @@ const DashboardAdmin = () => {
     }
   };
 
-  const handleAddUser = () => {
-    console.log("Añadiendo usuario...");
-  }
+
+
+const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
+const handleAddUser = () => {
+  setIsAddModalOpen(true);
+};
+
+  //-----------------------
 
   const handleAddStudent = async () => {
     const firstName = prompt("Nombre del estudiante:");
@@ -168,6 +203,7 @@ const DashboardAdmin = () => {
           <span className="text-lg font-semibold text-gray-800 tracking-wide">
             Admin Panel
           </span>
+          
         </div>
 
         <div className="flex items-center gap-8">
@@ -251,7 +287,7 @@ const DashboardAdmin = () => {
                   email={user.email}
                   roleName={user.roleName}
                   onEdit={onEditUser}
-                  onDelete={onDelete}
+                   onDelete={() => onDeleteUser(user.id)}//------//
                 />
               ))
             : activeUsersManagement && (
@@ -320,6 +356,37 @@ const DashboardAdmin = () => {
             }}
           />
         )}
+
+
+        {isAddModalOpen && (
+        <AddUserModal
+          isOpen={isAddModalOpen}
+          onClose={() => setIsAddModalOpen(false)}
+          onSave={async (newUser) => {
+            const token = localStorage.getItem("token");
+            if (!token) {
+              showErrorToast("Token no encontrado ❌");
+              return;
+            }
+
+            try {
+              await createUser(newUser, token);
+              showSuccessToast("Usuario creado correctamente ✅");
+
+              const updatedUsers = await getUsers(token);
+              setUsers(updatedUsers);
+            } catch (error) {
+              console.error("Error al crear usuario:", error);
+              showErrorToast("Error al crear el usuario ❌");
+            }
+
+            setIsAddModalOpen(false);
+          }}
+        />
+      )}
+
+
+
       </div>
     </>
   );
